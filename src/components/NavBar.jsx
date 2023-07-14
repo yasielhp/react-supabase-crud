@@ -1,47 +1,47 @@
-import { Button } from "react-bootstrap";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthProvider";
+import { Button } from 'react-bootstrap'
+import Container from 'react-bootstrap/Container'
+import Nav from 'react-bootstrap/Nav'
+import Navbar from 'react-bootstrap/Navbar'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthProvider'
 
 const NavBar = () => {
-  const { auth, signOut } = useAuth();
+  const { auth, signOut } = useAuth()
 
   const handleLogout = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
-      const { error } = await signOut();
-      console.log(error);
+      const { error } = await signOut()
+      console.log(error)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+    <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
       <Container>
         <Navbar.Brand>Address Book</Navbar.Brand>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+        <Navbar.Collapse id='responsive-navbar-nav'>
+          <Nav className='me-auto'>
             {!auth && (
-              <Nav.Link as={Link} to="/login">
+              <Nav.Link as={Link} to='/login'>
                 Login
               </Nav.Link>
             )}
             {!auth && (
-              <Nav.Link as={Link} to="/register">
+              <Nav.Link as={Link} to='/register'>
                 Register
               </Nav.Link>
             )}
             {auth && (
-              <Nav.Link as={Link} to="/">
+              <Nav.Link as={Link} to='/'>
                 Home
               </Nav.Link>
             )}
             {auth && (
-              <Nav.Link as={Link} to="/contacts">
+              <Nav.Link as={Link} to='/contacts'>
                 Contacts
               </Nav.Link>
             )}
@@ -56,7 +56,7 @@ const NavBar = () => {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-  );
-};
+  )
+}
 
-export default NavBar;
+export default NavBar

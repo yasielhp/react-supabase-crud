@@ -1,53 +1,53 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "../supabase/client";
+import { createContext, useContext, useEffect, useState } from 'react'
+import { supabase } from '../supabase/client'
 
-const AuthContext = createContext({});
+const AuthContext = createContext({})
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => useContext(AuthContext)
 
 const login = (email, password) =>
-  supabase.auth.signInWithPassword({ email, password });
+  supabase.auth.signInWithPassword({ email, password })
 
-const signOut = () => supabase.auth.signOut();
+const signOut = () => supabase.auth.signOut()
 
 const passwordReset = (email) =>
   supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: "http://localhost:5173/update-password"
-  });
+    redirectTo: 'http://localhost:5173/update-password'
+  })
 
 const updatePassword = (updatedPassword) =>
-  supabase.auth.updateUser({ password: updatedPassword });
+  supabase.auth.updateUser({ password: updatedPassword })
 
 const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [auth, setAuth] = useState(false)
+  const [user, setUser] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setLoading(true);
+    setLoading(true)
     const getUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      setUser(data.user ?? null);
-      setAuth(data.user ? true : false);
-      setLoading(false);
-    };
-    getUser();
+      const { data } = await supabase.auth.getUser()
+      setUser(data.user ?? null)
+      setAuth(!!data.user)
+      setLoading(false)
+    }
+    getUser()
     const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log(event);
-      if (event == "PASSWORD_RECOVERY") {
-        setAuth(false);
-      } else if (event === "SIGNED_IN") {
-        setUser(session.user);
-        setAuth(true);
-      } else if (event === "SIGNED_OUT") {
-        setAuth(false);
-        setUser(null);
+      console.log(event)
+      if (event === 'PASSWORD_RECOVERY') {
+        setAuth(false)
+      } else if (event === 'SIGNED_IN') {
+        setUser(session.user)
+        setAuth(true)
+      } else if (event === 'SIGNED_OUT') {
+        setAuth(false)
+        setUser(null)
       }
-    });
+    })
     return () => {
-      data.subscription.unsubscribe();
-    };
-  }, []);
+      data.subscription.unsubscribe()
+    }
+  }, [])
 
   return (
     <AuthContext.Provider
@@ -58,10 +58,11 @@ const AuthProvider = ({ children }) => {
         signOut,
         passwordReset,
         updatePassword
-      }}>
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
 
-export default AuthProvider;
+export default AuthProvider
